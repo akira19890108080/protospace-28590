@@ -1,6 +1,7 @@
 class PrototypesController < ApplicationController
   before_action :authenticate_user!, expect: [:show, :index]
   before_action :move_to_index, except: [:index, :show]
+  
   def index
     @prototypes = Prototype.all
   end
