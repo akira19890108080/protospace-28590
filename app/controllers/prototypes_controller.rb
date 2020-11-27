@@ -1,8 +1,7 @@
 class PrototypesController < ApplicationController
-
   before_action :authenticate_user!, expect: [:show, :index]
-  before_action :contributor_confirmation, only: [:edit, :update, :destroy]
-
+  before_action :move_to_index, except: [:index, :show]
+  
   def index
     @prototypes = Prototype.all
   end
@@ -12,8 +11,7 @@ class PrototypesController < ApplicationController
   end
 
   def create
-    @prototype = Prototype.new(prototype_params)
-    if @prototype.save
+    if Prototype.create(prototype_params)
       redirect_to root_path(@prototype)
     else
       render :new
@@ -50,8 +48,9 @@ class PrototypesController < ApplicationController
     params.require(:prototype).permit(:image, :title, :catch_copy, :concept).merge(user_id: current_user.id)
   end
 
-  def contributor_confirmation
-    @prototype = Prototype.find(params[:id])
-    redirect_to root_path unless current_user == @prototype.user
+  def move_to_index
+    unless user_signed_in?
+      redirect_to action: :index
+    end
   end
 end
