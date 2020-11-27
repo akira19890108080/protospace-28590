@@ -1,6 +1,8 @@
 class PrototypesController < ApplicationController
+
   before_action :authenticate_user!, expect: [:show, :index]
   before_action :contributor_confirmation, only: [:edit, :update, :destroy]
+
   def index
     @prototypes = Prototype.all
   end
